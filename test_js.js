@@ -1,5 +1,5 @@
 //var GtfsRealtimeBindings = require('./node_modules/gtfs-realtime-bindings');
-import GtfsRealtimeBindings from "gtfs-realtime-bindings";
+import GtfsRealtimeBindings from "./node_modules/gtfs-realtime-bindings";
 var request = require('request');
 
 var requestSettings = {
