@@ -30,4 +30,38 @@ catch (error) {
     console.log(error);
     process.exit(1);
 }
+
+var data = [
+    {
+      type: "scattermapbox",
+      lat: latitude_arr,
+      lon: longitude_arr,
+      mode: "markers",
+      marker: {
+        size: 14
+      },
+      //text: ["Montreal"]
+    }
+  ];
+  
+  var layout = {
+    autosize: true,
+    hovermode: "closest",
+    mapbox: {
+      bearing: 0,
+      center: {
+        lat: 32.716734,
+        lon: -117.138044
+      },
+      pitch: 0,
+      zoom: 5
+    }
+  };
+  
+  Plotly.setPlotConfig({
+    mapboxAccessToken: "pk.eyJ1IjoicGxvdGx5LWRvY3MiLCJhIjoiY2s1MnNtODFwMDE4YjNscG5oYWNydXFxYSJ9.AquTxb6AI-oo7TWt01YQ9Q"
+  });
+  
+  Plotly.newPlot("myDiv", data, layout);
+
 })(); 
