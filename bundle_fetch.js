@@ -56,12 +56,12 @@ var data = [
         lon: -117.138044
       },
       pitch: 0,
-      zoom: 5
+      zoom: 10
     }
   };
   
   Plotly.setPlotConfig({
-    mapboxAccessToken: "pk.eyJ1IjoicGxvdGx5LWRvY3MiLCJhIjoiY2s1MnNtODFwMDE4YjNscG5oYWNydXFxYSJ9.AquTxb6AI-oo7TWt01YQ9Q"
+    mapboxAccessToken: "pk.eyJ1IjoicGthc2wiLCJhIjoiY2xkOWswampzMDl0bTNubW0zaGZwa3JudSJ9.rfPdeEe_uLSGhWcRZbbhpA"
   });
   
   Plotly.newPlot("myDiv", data, layout);
