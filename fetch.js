@@ -128,7 +128,7 @@ map.on('load', () => {
     },
     'paint': {
       'line-color': '#0063a7',
-      'line-width': 4
+      'line-width': 5
     }
   });
   map.addSource('trolley_locations', {
