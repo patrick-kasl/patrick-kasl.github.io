@@ -17,6 +17,39 @@ const colors = JSON.parse(colors_json);
 var trips;
 var shapes;
 var mapbox_features = [];
+
+// 
+function trolley_geojson(lon, lat, direction) {
+  
+  if (direction == 'North'){
+    console.log(direction);
+    return {
+      // feature for Mapbox DC
+      'type': 'Feature',
+      'geometry': {
+        'type': 'Point',
+        'coordinates': [lon,lat]
+        },
+      'properties': {
+        'direction': direction
+      }
+    };
+  } else if (direction == 'South') {
+    return {
+      // feature for Mapbox DC
+      'type': 'Feature',
+      'geometry': {
+        'type': 'Point',
+        'coordinates': [lon,lat]
+        },
+      'properties': {
+        'direction': direction
+      }
+    };
+  }
+  
+}
+
 d3.json("./trips_test.json", function(data){
     trips = data;
 
@@ -44,22 +77,7 @@ try {
               longitude.push(entity.vehicle.position.longitude);
               symbols.push("rail-light");
               directions.push(trips[entity.vehicle.trip.tripId].direction_name);
-              mapbox_features.push(
-                  {
-                    // feature for Mapbox DC
-                    'type': 'Feature',
-                    'geometry': {
-                      'type': 'Point',
-                      'coordinates': [
-                        entity.vehicle.position.longitude,
-                        entity.vehicle.position.latitude]
-                      },
-                    'properties': {
-                      'title': 'Mapbox DC'
-                    }
-                  },
-              );
-
+              mapbox_features.push(trolley_geojson(entity.vehicle.position.longitude, entity.vehicle.position.latitude, trips[entity.vehicle.trip.tripId].direction_name));
             }
         }
     });
@@ -69,124 +87,13 @@ catch (error) {
     console.log(error);
     process.exit(1);
 }
-const df = new DataFrame({
-  Direction: directions,
-  lat: latitude, 
-  lon: longitude,
-  symbol: symbols
-}, ['Direction', 'lat', 'lon', 'symbol']);
-
-var data = [];
-
-var blue_line_shape = {
-     type: 'linemapbox',
-     lat: shapes[1],
-     lon: shapes[2],
-     mode: 'lines',
-     line:{
-      width: 2,
-      color: 'blue'
-  }
-  };
-
-data.push(blue_line_shape);
-/*
-for (let i = 0; i < direction_classes.length; i++){
-  data.push(
-    {
-      type: 'scattermapbox',
-      name: direction_classes[i],
-      lat: df.filter(row => row.get('Direction') == direction_classes[i]).select('lat').toArray().flat(),
-      lon: df.filter(row => row.get('Direction') == direction_classes[i]).select('lon').toArray().flat(),
-      mode:'markers',
-       marker: {
-         size:20
-       },
-   }
-  );
-}
-*/
-direction_classes.map(function(classes) {
-  //lati = df.filter(row => row.get('Direction') == classes).get('lat').to_array();
-  //long = df.filter(row => row.get('Direction') == classes).get('long').to_array();
-  return {
-     type: 'scattermapbox',
-     name: classes,
-     lat: df.filter(row => row.get('Direction') == classes).select('lat').toArray().flat(),
-     lon: df.filter(row => row.get('Direction') == classes).select('lon').toArray().flat(),
-     mode:'markers',
-      marker: {
-        size:20
-      },
-  };
-});
-
-/*
-for (let i = 0; i < symbols_plot.length; i++){
-  data.push(symbols_plot[i]);
-}
-*/
-
-console.log(data);
-
-  var layout = {
-    title: 'Current Blue Line Trolley Locations',
-    font: {
-      color: 'white'
-    },
-    autosize: false,
-    width: 800,
-    height: 1000,
-    hovermode: "closest",
-    showlegend: true,
-    mapbox: {
-      style: 'dark',
-      bearing: 0,
-      center: {
-        lat: 32.716734,
-        lon: -117.138044
-      },
-      pitch: 0,
-      zoom: 10,
-
-    },
-    paper_bgcolor: '#11191f',
-    plot_bgcolor: '#11191f',
-    annotations: [{
-        x: 0,
-        y: -0.02,
-        xref: 'paper',
-        yref: 'paper',
-      text: 'Source: <a href="https://www.sdmts.com/business-center/app-developers/real-time-data" style="color: rgb(255,255,255)">San Diego MTS</a>',
-      showarrow: false
-    }]
-  };
-  
-  Plotly.setPlotConfig({
-    mapboxAccessToken: "pk.eyJ1IjoicGthc2wiLCJhIjoiY2xkOWswampzMDl0bTNubW0zaGZwa3JudSJ9.rfPdeEe_uLSGhWcRZbbhpA"
-  });
-  
-  Plotly.newPlot("myDiv", data, layout);
-
 })(); 
 
 
 var mapbox_js_shape = [];
 
-console.log(shapes['0'].length)
+//Get the route line points in the right structure
 for (let i = 0; i < shapes['0'].length; i++){
-  console.log(i)
-  //console.log([shapes['1'][i.toString()], shapes['0'][i]])
-  mapbox_js_shape.push([shapes[1][i], shapes[0][i]]);
-}
-
-
-var mapbox_js_shape = [];
-
-console.log(shapes['0'].length)
-for (let i = 0; i < shapes['0'].length; i++){
-  console.log(i)
-  //console.log([shapes['1'][i.toString()], shapes['0'][i]])
   mapbox_js_shape.push([shapes[1][i], shapes[0][i]]);
 }
 
@@ -240,7 +147,14 @@ map.on('load', () => {
     'paint': {
       'circle-radius': 7,
       'circle-stroke-width': 1,
-      'circle-color': 'orange',
+      'circle-color': [
+        'match',
+        ['get', 'direction'],
+        'North', '#02ffc4',
+        'South', '#dd02ff',
+        /*else */ '#ccc'
+        ],
+      
       'circle-stroke-color': 'white'
     }
   });
