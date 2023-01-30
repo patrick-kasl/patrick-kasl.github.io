@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Patrick, Awesome Website, Great Job</title>
+
+    <!-- Pico.css -->
+    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@1.*/css/pico.min.css">
+
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.css" rel="stylesheet">
+
+
+    <!-- Custom template-->
+    <link rel="stylesheet" href="css/custom.css">
+
+    <style>
+        .hero {
+            background-color: #394046;
+            background-image: url("torrey_pines_landscape.jpg");
+            background-position: center;
+            background-size: cover;
+        }
+
+        .legend {
+            background-color: #11191f;
+            border-radius: 3px;
+            bottom: 30px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+            padding: 10px;
+            /*position: absolute;*/
+            /*right: 10px;*/
+            z-index: 1;
+        }
+
+        .legend h4 {
+            margin: 0 0 10px;
+        }
+
+        .legend div span {
+            border-radius: 50%;
+            display: inline-block;
+            height: 10px;
+            margin-right: 5px;
+            width: 10px;
+        }
+
+        #map {
+            width: 800px;
+            height: 1000px;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script src="https://gmousse.github.io/dataframe-js/dist/dataframe.js"></script>
+    <script src='https://cdn.plot.ly/plotly-2.18.0.min.js'></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.js"></script>
+    <script type="module" src="./bundle_fetch.js"></script>
+
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header class="container">
+        <div class="hero">
+            <nav class="container-fluid">
+                <ul>
+                    <!--
+              <li><summary href="./" class="secondary" onclick="event.preventDefault()"><strong><kbd>Patrick Kasl</kbd></strong></a></li>
+              -->
+                    <li><a href="./index.html"><img src="./profile.jpg" alt="profile" style="clip-path: circle(); height:150px;"></a></li>
+                </ul>
+                <ul>
+                    <li>
+                        <details role="list" dir="rtl">
+                            <summary aria-haspopup="listbox" role="link" class="contrast"><kbd>Research</kbd></summary>
+                            <ul role="listbox">
+                                <li><a href="./paper_1.html">Wearables and Vaccine Response</a></li>
+                                <li><a href="#">Paper 2</a></li>
+                                <li><a href="#">Current Interests</a></li>
+                            </ul>
+                        </details>
+                    </li>
+                    <li>
+                        <details role="list" dir="rtl">
+                            <summary aria-haspopup="listbox" role="link" class="contrast"><kbd>For Fun</kbd></summary>
+                            <ul role="listbox">
+                                <li><a href="../preview/">San Diego Transit</a></li>
+                                <li><a href="./photography.html">Photography</a></li>
+                                <li><a href="../classless/">Backpacking</a></li>
+                                <li><a href="../basic-template/">Tidy Tuesday</a></li>
+                            </ul>
+                        </details>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="container" style="opacity: 0.85;">
+                <article>
+                    <hgroup>
+                        <h1 style="opacity: 1; color:white;"><strong><em><a href="https://www.mdpi.com/2076-393X/10/2/264">Metrics from Wearable Devices as Candidate Predictors of Antibody Response
+                                        Following Vaccination against COVID-19: Data from the Second TemPredict Study</a></em></strong></h1>
+                    </hgroup>
+                </article>
+
+            </div>
+
+        </div><!-- ./ Hero -->
+
+    </header><!-- ./ Header -->
+
+    <!-- Main -->
+
+    <section class="container">
+
+        <!-- Medias-->
+        <figure>
+            <a href="https://www.mdpi.com/2076-393X/10/2/264"><img src="./wearable_response.png" style="width:100%;"></a>
+            <figcaption>Plots depicting (A) changes in heart rate (HR); (B) heart rate variability (HRV); (C) respiratory rate (RR); and (D) temperature deviation the nights surrounding the second
+                injection for Pfizer-BioNTech and Moderna-NAIAD vaccine recipients, combined, Values are z-scored for participants' pre-vaccination baseline period.</figcaption>
+        </figure>
+
+    </section><!-- ./ Typography-->
+
+</body>
+
+</html>

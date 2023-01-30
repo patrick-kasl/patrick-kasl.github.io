@@ -1,168 +1,147 @@
-
 <!DOCTYPE html>
-<!--
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@1.*/css/pico.min.css">
-    <title>Awesome Website Patrick, Great Job</title>
-    
-      <script src="https://cdn.jsdelivr.net/npm/danfojs@1.1.2/lib/bundle.min.js"></script>
-    
 
-  </head>
-  <body>
-    <p>hello</p>
-    <div id="myDiv" style="height: 500px; width: 900px"></div>
-  </body>
-</html>
--->
+<html lang="en" data-theme="dark">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Patrick, Awesome Website, Great Job</title>
+
+  <!-- Pico.css -->
+  <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@1.*/css/pico.min.css">
+
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.css" rel="stylesheet">
 
 
-<html lang="en">
-<html data-theme="dark"></html>
+  <!-- Custom template-->
+  <link rel="stylesheet" href="css/custom.css">
 
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Patrick, Awesome Website, Great Job</title>
+  <style>
+    .hero {
+      background-color: #394046;
+      background-image: url("torrey_pines_landscape.jpg");
+      background-position: center;
+      background-size: cover;
+    }
 
-    <!-- Pico.css -->
-    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@1.*/css/pico.min.css">
-    
-    <link href="https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.css" rel="stylesheet">
-    
-    
-    <!-- Custom template-->
-    <link rel="stylesheet" href="css/custom.css">
-    
-    <style>
-      .hero {
-        background-color: #394046;
-        background-image: url("torrey_pines_landscape.jpg");
-        background-position: center;
-        background-size: cover;
-      }
-      .legend {
-        background-color: #11191f;
-        border-radius: 3px;
-        bottom: 30px;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-        font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
-        padding: 10px;
-        /*position: absolute;*/
-        /*right: 10px;*/
-        z-index: 1;
-      }
-        
-      .legend h4 {
-        margin: 0 0 10px;
-      }
-        
-      .legend div span {
-        border-radius: 50%;
-        display: inline-block;
-        height: 10px;
-        margin-right: 5px;
-        width: 10px;
-      }
-      #map{
-        width: 800px;
-        height: 1000px;
-      }
-    </style>
-    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
-    <script src="https://gmousse.github.io/dataframe-js/dist/dataframe.js"></script>
-    <script src='https://cdn.plot.ly/plotly-2.18.0.min.js'></script>
-    <script src="https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.js"></script>
-    <script type="module" src="./bundle_fetch.js"></script>
+    .legend {
+      background-color: #11191f;
+      border-radius: 3px;
+      bottom: 30px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+      padding: 10px;
+      /*position: absolute;*/
+      /*right: 10px;*/
+      z-index: 1;
+    }
 
-  </head>
+    .legend h4 {
+      margin: 0 0 10px;
+    }
 
-  <body>
+    .legend div span {
+      border-radius: 50%;
+      display: inline-block;
+      height: 10px;
+      margin-right: 5px;
+      width: 10px;
+    }
 
-    <!-- Header -->
-    <header class="container">
-      <div class="hero">
-        <nav class="container-fluid">
-          <ul>
-            <!--
+    #map {
+      width: 600px;
+      height: 800px;
+      /*max-height: 100%;*/
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <script src="https://gmousse.github.io/dataframe-js/dist/dataframe.js"></script>
+  <script src='https://cdn.plot.ly/plotly-2.18.0.min.js'></script>
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.js"></script>
+  <script type="module" src="./bundle_fetch.js"></script>
+
+</head>
+
+<body>
+
+  <!-- Header -->
+  <header class="container">
+    <div class="hero">
+      <nav class="container-fluid">
+        <ul>
+          <!--
               <li><summary href="./" class="secondary" onclick="event.preventDefault()"><strong><kbd>Patrick Kasl</kbd></strong></a></li>
               -->
-              <li><img src="./profile.jpg" alt="profile" style="clip-path: circle(); height:150px;"></li>
-          </ul>
-          <ul>
-            <li>
-              <details role="list" dir="rtl">
-                <summary aria-haspopup="listbox" role="link" class="contrast"><kbd>Research</kbd></summary>
-                <ul role="listbox">
-                  <li><a href="#">Paper 1</a></li>
-                  <li><a href="#">Paper 2</a></li>
-                  <li><a href="#">Current Interests</a></li>
-                </ul>
-              </details>
-            </li>
-            <li>
-              <details role="list" dir="rtl">
-                <summary aria-haspopup="listbox" role="link" class="contrast"><kbd>For Fun</kbd></summary>
-                <ul role="listbox">
-                  <li><a href="../preview/">San Diego Transit</a></li>
-                  <li><a href="../preview-rtl/">Photography</a></li>
-                  <li><a href="../classless/">Backpacking</a></li>
-                  <li><a href="../basic-template/">Tidy Tuesday</a></li>
-                </ul>
-              </details>
-            </li>
-          </ul>
-        </nav>
-        
-        <div>
-          <h1 style = "opacity: 0;">Test</h1>
-          <h1 style = "opacity: 0;">Test</h1>
+          <li><a href="./index.html"><img src="./profile.jpg" alt="profile" style="clip-path: circle(); height:150px;"></a></li>
+        </ul>
+        <ul>
+          <li>
+            <details role="list" dir="rtl">
+              <summary aria-haspopup="listbox" role="link" class="contrast"><kbd>Research</kbd></summary>
+              <ul role="listbox">
+                <li><a href="./paper_1.html">Wearables and Vaccine Response</a></li>
+                <li><a href="#">Paper 2</a></li>
+                <li><a href="#">Current Interests</a></li>
+              </ul>
+            </details>
+          </li>
+          <li>
+            <details role="list" dir="rtl">
+              <summary aria-haspopup="listbox" role="link" class="contrast"><kbd>For Fun</kbd></summary>
+              <ul role="listbox">
+                <li><a href="../preview/">San Diego Transit</a></li>
+                <li><a href="./photography.html">Photography</a></li>
+                <li><a href="../classless/">Backpacking</a></li>
+                <li><a href="../basic-template/">Tidy Tuesday</a></li>
+              </ul>
+            </details>
+          </li>
+        </ul>
+      </nav>
+
+      <div>
+        <h1 style="opacity: 0;">Test</h1>
+        <h1 style="opacity: 0;">Test</h1>
+      </div>
+
+      <div class="container" style="opacity: 0.85;">
+        <article>
+          <hgroup>
+            <h1 style="opacity: 1 !important;">Patrick Kasl</h1>
+            <h2 style="opacity: 1;"><strong><em>​Data science researcher proficient in Python with a passion for beautiful data visualizations and rigorous statistical analysis.</em></strong></h2>
+          </hgroup>
+        </article>
+
+      </div>
+
+    </div><!-- ./ Hero -->
+
+  </header><!-- ./ Header -->
+
+  <!-- Main -->
+
+  <main class="container">
+
+
+    <!-- Medias-->
+    <figure>
+      <div style="width :600px; margin-bottom: 0rem !important;">
+        <h3 style="width :600px; margin-bottom: 0.5rem !important;">Current Blue Line Locations</h3>
+      </div>
+
+      <div class="grid">
+        <div id="map" style="padding-bottom: 10px;"></div>
+
+        <div id="state-legend" class="legend" style="text-align: left !important;">
+          <h4>Direction</h4>
+          <div style="font-size: 15px;"><span style="background-color: #02ffc4; width:15px; height:15px;"></span>North</div>
+          <div style="font-size: 15px;"><span style="background-color: #dd02ff; width:15px; height:15px;"></span>South</div>
         </div>
-        
-        <div class="container" style="opacity: 0.85;">
-          <article>
-            <hgroup>
-              <h1 style="opacity: 1 !important;">Patrick Kasl</h1>
-              <h2 style="opacity: 1;"><strong><em>​Data science researcher proficient in Python with a passion for beautiful data visualizations and rigorous statistical analysis.</em></strong></h2>
-            </hgroup>
-          </article>
-          
-        </div>
+      </div>
 
-      </div><!-- ./ Hero -->
-      
-    </header><!-- ./ Header -->
+    </figure>
+    </section><!-- ./ Typography-->
 
-    <!-- Main -->
-    
-    <main class="container">
-
-      
-        <!-- Medias-->
-        <figure>
-          <div class = "grid">
-            <h3>Current Blue Line Locations</h3>
-            <div id="state-legend" class="legend">
-              <h4>Direction</h4>
-              <div><span style="background-color: #02ffc4"></span>North</div>
-              <div><span style="background-color: #dd02ff"></span>South</div>
-            </div>
-          </div>
-          
-          <div id="map"></div>
-
-          <!--<div id="myDiv"></div>-->
-          <!--
-          <img src="assets/aleksandar-jason-a562ZEFKW8I-unsplash-2000x1000.jpg" alt="Minimal landscape">
-          <figcaption>Image from <a href="https://unsplash.com/photos/a562ZEFKW8I" target="_blank">unsplash.com</a></figcaption>
-          -->
-        </figure>
-      </section><!-- ./ Typography-->
-
-
-
-  </body>
+</body>
 
 </html>

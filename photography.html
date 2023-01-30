@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Patrick, Awesome Website, Great Job</title>
+
+    <!-- Pico.css -->
+    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@1.*/css/pico.min.css">
+
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.css" rel="stylesheet">
+
+
+    <!-- Custom template-->
+    <link rel="stylesheet" href="css/custom.css">
+
+    <style>
+        .hero {
+            background-color: #394046;
+            background-image: url("torrey_pines_landscape.jpg");
+            background-position: center;
+            background-size: cover;
+        }
+
+        .legend {
+            background-color: #11191f;
+            border-radius: 3px;
+            bottom: 30px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+            padding: 10px;
+            /*position: absolute;*/
+            /*right: 10px;*/
+            z-index: 1;
+        }
+
+        .legend h4 {
+            margin: 0 0 10px;
+        }
+
+        .legend div span {
+            border-radius: 50%;
+            display: inline-block;
+            height: 10px;
+            margin-right: 5px;
+            width: 10px;
+        }
+
+        #map {
+            width: 800px;
+            height: 1000px;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script src="https://gmousse.github.io/dataframe-js/dist/dataframe.js"></script>
+    <script src='https://cdn.plot.ly/plotly-2.18.0.min.js'></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.js"></script>
+    <script type="module" src="./bundle_fetch.js"></script>
+
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header class="container" style="padding-bottom: 0px !important;">
+        <div class="hero">
+            <nav class="container-fluid">
+                <ul>
+                    <!--
+              <li><summary href="./" class="secondary" onclick="event.preventDefault()"><strong><kbd>Patrick Kasl</kbd></strong></a></li>
+              -->
+                    <li><a href="./index.html"><img src="./profile.jpg" alt="profile" style="clip-path: circle(); height:150px;"></a></li>
+                </ul>
+                <ul>
+                    <li>
+                        <details role="list" dir="rtl">
+                            <summary aria-haspopup="listbox" role="link" class="contrast"><kbd>Research</kbd></summary>
+                            <ul role="listbox">
+                                <li><a href="./paper_1.html">Wearables and Vaccine Response</a></li>
+                                <li><a href="#">Paper 2</a></li>
+                                <li><a href="#">Current Interests</a></li>
+                            </ul>
+                        </details>
+                    </li>
+                    <li>
+                        <details role="list" dir="rtl">
+                            <summary aria-haspopup="listbox" role="link" class="contrast"><kbd>For Fun</kbd></summary>
+                            <ul role="listbox">
+                                <li><a href="../preview/">San Diego Transit</a></li>
+                                <li><a href="./photography.html">Photography</a></li>
+                                <li><a href="../classless/">Backpacking</a></li>
+                                <li><a href="../basic-template/">Tidy Tuesday</a></li>
+                            </ul>
+                        </details>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="container" style="opacity: 0.85;">
+                <article>
+                    <hgroup>
+                        <h3 style="opacity: 1;">Film photopgraphy is an intermitent obsession.</h3>
+                        <h4 style="opacity: 1;">Every once in awhile I pick up my camera and make it through a roll of film. Here is a compilation of some of my favorite shots</h4>
+                    </hgroup>
+                </article>
+
+            </div>
+
+        </div><!-- ./ Hero -->
+
+    </header><!-- ./ Header -->
+
+    <!-- Main -->
+    
+    <main class="container" style="padding:0px;">
+        <h2>My kit</h2>
+        <figure style="text-align: center;">
+            <img src="./mirror_eos_5.jpg" alt="Architecture">
+            <figcaption>I primarily shoot with a Canon EOS 5.</figcaption>
+        </figure>
+
+        <h2>Shot on Ilford Delta 3200 </h2>
+        <figure style="text-align: center;">
+            <img src="./lamps.jpg" alt="Architecture">
+            <figcaption>Lampstore, Gaslamp Quater, San Diego</figcaption>
+        </figure>
+
+        <figure style="text-align: center;">
+            <img src="./through_fence.jpg" alt="Architecture">
+            <figcaption>Construction site, Gaslamp Quater, San Diego</figcaption>
+        </figure>
+
+        <figure style="text-align: center;">
+            <img src="./gaslamp.jpg" alt="Architecture">
+            <figcaption>Gaslamp Quarter, San Diego</figcaption>
+        </figure>
+
+        <figure style="text-align: center;">
+            <img src="./porta.jpg" alt="Architecture">
+            <figcaption>San Diego</figcaption>
+        </figure>
+
+        <figure style="text-align: center;">
+            <img src="./album_cover.jpg" alt="Architecture">
+            <figcaption>UCSD Health La Jolla Station</figcaption>
+        </figure>
+
+        <h2>Shot on Cinstill 800T </h2>
+        <figure style="text-align: center;">
+            <img src="./city_college.jpg" alt="Architecture">
+            <figcaption>City College at Night, San Diego</figcaption>
+        </figure>
+
+        <figure style="text-align: center;">
+            <img src="./whale.jpg" alt="Architecture">
+            <figcaption>Amelia and Mural, Encinitas</figcaption>
+        </figure>
+
+        <figure style="text-align: center;">
+            <img src="./coffee_beach.jpg" alt="Architecture">
+            <figcaption>Swami's Beach, Encinitas</figcaption>
+        </figure>
+        
+        <figure style="text-align: center;">
+            <img src="./chandelier.jpg" alt="Architecture">
+            <figcaption>Chandelier, somewhere in the Met, NYC</figcaption>
+        </figure>
+
+        <figure style="text-align: center;">
+            <img src="./ny_fountain.jpg" alt="Architecture">
+            <figcaption>Fountain outside of the Met, NYC</figcaption>
+        </figure>
+
+        <figure style="text-align: center;">
+            <img src="./ny_skyline_met.jpg" alt="Architecture">
+            <figcaption>Garden bar on top of the Met, NYC</figcaption>
+        </figure>
+
+        <figure style="text-align: center;">
+            <img src="./ny_amelia.jpg" alt="Architecture">
+            <figcaption>Best view in the city, NYC</figcaption>
+        </figure>
+
+        <figure style="text-align: center;">
+            <img src="./family_vacation.jpg" alt="Architecture">
+            <figcaption>Nieces, UP of Michigan</figcaption>
+        </figure>
+
+        <h2>Shot on Portra 400</h2>
+        <figure style="text-align: center;">
+            <img src="./coronado_pier_amelia.jpg" alt="Architecture">
+            <figcaption>Coronado, San Diego</figcaption>
+        </figure>
+
+        <figure style="text-align: center;">
+            <img src="./backlit_amelia_coronado.jpg" alt="Architecture">
+            <figcaption>Coronado, San Diego</figcaption>
+        </figure>
+
+        <h2>Shot on Fujifilm 200</h2>
+        <figure style="text-align: center;">
+            <img src="./ferris_sd.jpg" alt="Architecture">
+            <figcaption>Del Mar Fair, San Diego</figcaption>
+        </figure>
+
+        <figure style="text-align: center;">
+            <img src="./ride_motion.jpg" alt="Architecture">
+            <figcaption>In motion at the fair, San Diego</figcaption>
+        </figure>
+
+        <h2>Shot on Portra 400</h2>
+        <figure style="text-align: center;">
+            <img src="./kings_canyon_tent.jpg" alt="Architecture">
+            <figcaption>Campground, Kings Canyon National Partk</figcaption>
+        </figure>
+
+        <figure style="text-align: center;">
+            <img src="./kings_canyon_sunset.jpg" alt="Architecture">
+            <figcaption>Sunset, Kings Canyon National Partk</figcaption>
+        </figure>
+
+        <figure style="text-align: center;">
+            <img src="./kings_canyon_scotty.jpg" alt="Architecture">
+            <figcaption>A lovely hiking partner</figcaption>
+        </figure>
+
+        <h2>Shot on Fujifilm 200</h2>
+        <figure style="text-align: center;">
+            <img src="./sunset_coronado_beach.jpg" alt="Architecture">
+            <figcaption>Coronado Beach</figcaption>
+        </figure>
+        
+        <figure style="text-align: center;">
+            <img src="./ucsd_building.jpg" alt="Architecture">
+            <figcaption>UCSD Engineering Building, La Jolla</figcaption>
+        </figure>
+
+        <figure style="text-align: center;">
+            <img src="./coke_bench.jpg" alt="Architecture">
+            <figcaption>A bench, La Jolla</figcaption>
+        </figure>
+
+        <figure style="text-align: center;">
+            <img src="./glider_port.jpg" alt="Architecture">
+            <figcaption>Glider Port, La Jolla</figcaption>
+        </figure>
+
+    </main>
+
+</body>
+
+</html>
