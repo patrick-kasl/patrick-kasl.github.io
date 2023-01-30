@@ -17,6 +17,7 @@ const colors = JSON.parse(colors_json);
 var trips;
 var shapes;
 var mapbox_features = [];
+var updated_time;
 
 // 
 function trolley_geojson(lon, lat, direction) {
@@ -81,7 +82,10 @@ d3.json("./trips_test.json", function (data) {
             }
           }
         });
-
+        updated_time = new Date(feed.header.timestamp*1000);
+        // We're at an eight hour offset from UTC: 8*60*60
+        console.log(updated_time);
+        document.getElementById("last_updated").innerHTML = updated_time.toLocaleString();
       }
       catch (error) {
         console.log(error);
@@ -160,5 +164,7 @@ d3.json("./trips_test.json", function (data) {
       });
     });
 
+
   });
+  
 });
