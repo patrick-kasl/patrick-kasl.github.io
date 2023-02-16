@@ -14,15 +14,53 @@ var shapes;
 var updated_time;
 var route_color = "Blue";
 
-function choose(choice) {
+
+mapboxgl.accessToken = 'pk.eyJ1IjoicGthc2wiLCJhIjoiY2xkOWswampzMDl0bTNubW0zaGZwa3JudSJ9.rfPdeEe_uLSGhWcRZbbhpA';
+var map = new mapboxgl.Map({
+    container: 'map',
+    // Choose from Mapbox's core styles, or make your own style with Mapbox Studio
+    style: 'mapbox://styles/pkasl/cldhqqkmp000z01pf374os34v',
+    center: [-117.138044, 32.716734],
+    zoom: 10
+});
+
+function changeRoute(choice) {
     route_color = choice;
+    map.getSource('route').setData(
+        {
+            'type': 'Feature',
+            'properties': {},
+            'geometry': {
+                'type': 'LineString',
+                'coordinates': shapes[route_color]['lat_lon']
+            }
+        }
+    );
+
+    map.setPaintProperty(
+        'route',
+        'line-color',
+        route_color_to_plot_color[route_color]
+    );
+
+    const mapbox_features = getLocation(route_color);
+
+    map.getSource('trolley_locations').setData(
+        {
+            'type': 'FeatureCollection',
+            'properties': {},
+            'features': mapbox_features,
+        }
+    );
 };
+
 // This allows the function to be used by the button in HTML
-window.choose = choose;
+window.changeRoute = changeRoute;
+
 
 function trolley_geojson(lon, lat, direction) {
 
-    console.log(direction);
+    //console.log(direction);
     return {
         // feature for Mapbox DC
         'type': 'Feature',
@@ -56,10 +94,10 @@ async function getLocation(route_color) {
         });
         updated_time = new Date(feed.header.timestamp * 1000);
         // We're at an eight hour offset from UTC: 8*60*60
-        console.log(updated_time);
+        //(updated_time);
         document.getElementById("last_updated").innerHTML = updated_time.toLocaleString();
-        
-        if (route_color == "Blue"){
+
+        if (route_color == "Blue") {
             const dir_1 = "North";
             document.getElementById("first_direction").innerHTML = dir_1;
             document.getElementById("second_direction").innerHTML = "South";
@@ -67,7 +105,7 @@ async function getLocation(route_color) {
             document.getElementById("first_direction").innerHTML = "East";
             document.getElementById("second_direction").innerHTML = "West";
         };
-        
+
         return mapbox_features;
     }
     catch (error) {
@@ -82,17 +120,9 @@ d3.json("./trips_test.json", function (data) {
     trips = data;
 
     d3.json("./all_lines_shape.json", function (data) {
+
         //d3.json("./blue_line_shape.json", function (data) {
         shapes = data;
-
-        mapboxgl.accessToken = 'pk.eyJ1IjoicGthc2wiLCJhIjoiY2xkOWswampzMDl0bTNubW0zaGZwa3JudSJ9.rfPdeEe_uLSGhWcRZbbhpA';
-        const map = new mapboxgl.Map({
-            container: 'map',
-            // Choose from Mapbox's core styles, or make your own style with Mapbox Studio
-            style: 'mapbox://styles/pkasl/cldhqqkmp000z01pf374os34v',
-            center: [-117.138044, 32.716734],
-            zoom: 10
-        });
 
         map.on('load', async () => {
             // Get the locations of all Vehicle positions.
@@ -157,28 +187,9 @@ d3.json("./trips_test.json", function (data) {
                 }
             });
 
-            //document.getElementById('blueButton').onclick = getLocation('520')
-
             // Update the source from the API every 2 seconds.
             const updateSource = setInterval(async () => {
                 const mapbox_features = await getLocation(route_color);
-
-                map.getSource('route').setData(
-                    {
-                        'type': 'Feature',
-                        'properties': {},
-                        'geometry': {
-                            'type': 'LineString',
-                            'coordinates': shapes[route_color]['lat_lon']
-                        }
-                    }
-                );
-
-                map.setPaintProperty(
-                    'route',
-                    'line-color',
-                    route_color_to_plot_color[route_color]
-                );
 
                 map.getSource('trolley_locations').setData(
                     {
@@ -187,8 +198,8 @@ d3.json("./trips_test.json", function (data) {
                         'features': mapbox_features,
                     }
                 );
-                
-            }, 1000);
+
+            }, 2000);
 
         });
     });
