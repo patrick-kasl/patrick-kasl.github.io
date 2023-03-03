@@ -117,11 +117,10 @@
   </header><!-- ./ Header -->
   <!-- Main -->
 
-  <main class="container" style="padding:0px;">
+  <main class="container" style="padding:0px; max-height: 100vh;">
     <section id="typography">
 
       <!-- Typography-->
-
 
       <!-- Lists-->
       <h3>Some cool transit related resources</h3>
@@ -132,21 +131,21 @@
     </section><!-- ./ Typography-->
 
     <!-- Medias-->
-    <figure style = "max-height: 80%;">
+    <div>
       <div style="max-width :100%; margin-bottom: 0rem !important;">
         <h3 style="max-width :100%; margin-bottom: 0.5rem !important;">Live Trolley Locations</h3>
       </div>
 
-      <div class="grid" style="max-width: 100%;">
+      <div class="grid" style="max-width: 600px;">
         <button onclick="changeRoute('Blue')" style="background-color: #0063a7;">Blue Line</button>
         <button onclick="changeRoute('Green')" style="background-color: #01ab52;">Green Line</button>
         <button onclick="changeRoute('Orange')" style="background-color: #f78320;">Orange Line</button>
       </div>
 
-      <div class="grid" style = "max-width: 100%; max-height: 80%;">
+      <div class="grid" style="max-width:100%;">
 
         <div>
-          <div id="map" style="padding-bottom: 10px;"></div>
+          <div id="map" style="padding-bottom: 10px; max-height: 90vh;"></div>
           <p style="font-size: 12px;">Data recent as of: <span id="last_updated"></span>. Source: <a href="https://www.sdmts.com/business-center/app-developers/real-time-data">San Digeo MTS</a></p>
         </div>
 
@@ -157,7 +156,7 @@
         </div>
       </div>
 
-    </figure>
+    </div>
     </section><!-- ./ Typography-->
     <footer>
       <div class="container">
