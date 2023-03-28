@@ -79,6 +79,7 @@
   <script src='https://cdn.plot.ly/plotly-2.18.0.min.js'></script>
   <script src="https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.js"></script>
   <script type="module" src="./bundle_fetch.js"></script>
+  
 
 </head>
 
@@ -127,7 +128,7 @@
         <article>
           <hgroup>
             <h1 style="opacity: 1 !important;">Public Transportation</h1>
-            <h2 style="opacity: 1;"><strong><em>A marvel of engineering we can experience on a daily basis.</em></strong></h2>
+            <h2 style="opacity: 1;"><strong><em>Engineering we can experience on a daily basis.</em></strong></h2>
           </hgroup>
         </article>
 
@@ -138,9 +139,9 @@
 
   <main class="container" style="padding:0px; max-height: 100vh;">
     <section id="typography">
-
+      <h2>This page is a bit more experimental, at times it might be broken.</h3>
       <!-- Typography-->
-
+      
       <!-- Lists-->
       <h3>Some cool urban related resources (none made by me)</h3>
       <p> 
@@ -149,6 +150,14 @@
       <p> 
         <a href="https://schoolofcities.github.io/city-guesser/index.html">City Guesser</a>
       </p>
+
+      <p> 
+        <a href="https://www.aaaarch.com/san-diego-streetcar-map/">1928-1949 San Diego Streetcar Lines</a>
+      </p>
+
+      <p> 
+        <a href="https://www.sdera.org/">San Diego Electric Railway Association, Inc. & National City Depot Museum</a>
+      </p>      
 
     </section><!-- ./ Typography-->
     
@@ -214,11 +223,28 @@
           <p style="font-size: 12px;">Data recent as of: <span id="last_updated"></span>. Source: <a href="https://www.sdmts.com/business-center/app-developers/real-time-data">San Digeo MTS</a></p>
         </div>
 
+        <table>
+          <thead>
+            <tr>
+              <th scope="col"style = "font-size: 1em;">Stop</th>
+              <th scope="col">Next</th>
+              <th scope="col">2nd</th>
+              <th scope="col">3rd</th>
+            </tr>
+          </thead>
+          <tbody id = 'table_body' style = "font-size: 0.75em; line-height: 0.35;">
+
+          </tbody>
+
+        </table>
+        <!--
         <div id="state-legend" class="legend" style="text-align: left !important;">
           <h4>Direction</h4>
           <div style="font-size: 15px;"><span style="background-color: #02ffc4; width:15px; height:15px;"></span><span style="width:100px;" id="first_direction"></span></div>
           <div style="font-size: 15px;"><span style="background-color: #dd02ff; width:15px; height:15px;"></span><span style="width:100px;" id="second_direction"></span></div>
         </div>
+        -->
+      
       </div>
 
     </div>

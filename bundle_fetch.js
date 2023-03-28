@@ -1,8 +1,6 @@
 (function(){function p(o,i,f){var a="function"==typeof require&&require;function c(n,r){if(!i[n]){if(!o[n]){var u="function"==typeof require&&require,u;if(!r&&u)return u(n,!0);if(a)return a(n,!0);throw(u=new Error("Cannot find module '"+n+"'")).code="MODULE_NOT_FOUND",u}var u=i[n]={exports:{}};o[n][0].call(u.exports,function(r){var e;return c(o[n][1][r]||r)},u,u.exports,p,o,i,f)}return i[n].exports}for(var r=0;r<f.length;r++)c(f[r]);return c}return p})()({1:[function(require,module,exports){
-(function (process){(function (){
 var GtfsRealtimeBindings = require('./node_modules/gtfs-realtime-bindings');
 var fetch = require('./node_modules/cross-fetch');
-
 
 const route_color_to_plot_color_json = '{"Blue":"#0063a7", "Green":"#01ab52", "Orange":"#f78320"}';
 const route_color_to_plot_color = JSON.parse(route_color_to_plot_color_json);
@@ -13,9 +11,11 @@ const color_to_route_id = JSON.parse(color_to_route_id_json);
 
 var trips;
 var shapes;
+var stop_names;
+var stop_id_to_name;
 var updated_time;
+var arrival_time_out;
 var route_color = "Blue";
-
 
 mapboxgl.accessToken = 'pk.eyJ1IjoicGthc2wiLCJhIjoiY2xkOWswampzMDl0bTNubW0zaGZwa3JudSJ9.rfPdeEe_uLSGhWcRZbbhpA';
 var map = new mapboxgl.Map({
@@ -59,7 +59,6 @@ function changeRoute(choice) {
 // This allows the function to be used by the button in HTML
 window.changeRoute = changeRoute;
 
-
 function trolley_geojson(lon, lat, direction) {
 
     //console.log(direction);
@@ -74,7 +73,97 @@ function trolley_geojson(lon, lat, direction) {
             'direction': direction
         }
     };
+};
 
+async function mts_predicted_arrival_times(route_color) {
+
+    try {
+        const response = await fetch("https://realtime.sdmts.com/api/api/gtfs_realtime/trip-updates-for-agency/MTS.pb?key=e2f3da8d-2ea3-40cf-9e30-0b937f0e3817", {});
+
+        const buffer = await response.arrayBuffer();
+        const feed = GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(
+            new Uint8Array(buffer)
+        );
+
+        console.log(feed);
+
+        // These will store the predicted times from the most recent feed of trip updates
+        let stop_times_north = new Map();
+        let stop_times_south = new Map();
+
+        
+        stop_names.stops[route_color].forEach(function (stop) {
+            stop_times_north.set(stop, []);
+            stop_times_south.set(stop, []);
+        });
+        
+        feed.entity.forEach(function (entity) {
+            if (entity.tripUpdate.trip != null) {
+                if (entity.tripUpdate.trip.routeId == color_to_route_id[route_color]) {
+                    if (route_color == "Blue") {
+                        if (trips[entity.tripUpdate.trip.tripId].direction_name == 'South') {
+                            entity.tripUpdate.stopTimeUpdate.forEach(function (stop_time_update) {
+                                let test = stop_times_south.get(stop_id_to_name[stop_time_update.stopId]);
+                                test.push(Math.round((stop_time_update.arrival.time*1000 - Date.now())/(1000*60)));
+                            });
+                        }
+                        if (trips[entity.tripUpdate.trip.tripId].direction_name == 'North') {
+                            entity.tripUpdate.stopTimeUpdate.forEach(function (stop_time_update) {
+                                let test = stop_times_north.get(stop_id_to_name[stop_time_update.stopId]);
+                                test.push(Math.round((stop_time_update.arrival.time*1000 - Date.now())/(1000*60)));
+                            });
+                        }
+                    } else {
+                        if (trips[entity.tripUpdate.trip.tripId].direction_name == 'East') {
+                            entity.tripUpdate.stopTimeUpdate.forEach(function (stop_time_update) {
+                                let test = stop_times_south.get(stop_id_to_name[stop_time_update.stopId]);
+                                test.push(Math.round((stop_time_update.arrival.time*1000 - Date.now())/(1000*60)));
+                            });
+                        }
+                        if (trips[entity.tripUpdate.trip.tripId].direction_name == 'West') {
+                            entity.tripUpdate.stopTimeUpdate.forEach(function (stop_time_update) {
+                                let test = stop_times_north.get(stop_id_to_name[stop_time_update.stopId]);
+                                test.push(Math.round((stop_time_update.arrival.time*1000 - Date.now())/(1000*60)));
+                            });
+                        }
+
+                    }
+                }
+
+            }
+        
+        });
+
+        stop_names.stops[route_color].forEach(function (stop) {
+            stop_times_north.set(stop, stop_times_north.get(stop).sort(function(a, b){return a-b}));
+            stop_times_north.set(stop, stop_times_north.get(stop).filter( x => x > -0 ));
+            stop_times_north.set(stop, stop_times_north.get(stop).filter( function( item, index, inputArray ) {return inputArray.indexOf(item) == index}));
+
+            stop_times_south.set(stop, stop_times_south.get(stop).sort(function(a, b){return a-b}));
+            stop_times_south.set(stop, stop_times_south.get(stop).filter( x => x > -0 ));
+            stop_times_south.set(stop, stop_times_south.get(stop).filter( function( item, index, inputArray ) {return inputArray.indexOf(item) == index}));
+        });
+
+        stop_names.stops[route_color].forEach(function (stop) {
+            let test = stop_times_north.get(stop);
+            test.push('*');
+            test.push('*');
+            test.push('*'); 
+            
+            let test_2 = stop_times_south.get(stop);
+            test_2.push('*');
+            test_2.push('*');
+            test_2.push('*'); 
+
+        });
+
+        
+        return [stop_times_north, stop_times_south];
+    }
+    catch (error) {
+        console.log(error);
+        //process.exit(1);
+    }
 };
 
 async function getLocation(route_color) {
@@ -98,7 +187,7 @@ async function getLocation(route_color) {
         // We're at an eight hour offset from UTC: 8*60*60
         //(updated_time);
         document.getElementById("last_updated").innerHTML = updated_time.toLocaleString();
-
+        /*
         if (route_color == "Blue") {
             const dir_1 = "North";
             document.getElementById("first_direction").innerHTML = dir_1;
@@ -107,12 +196,13 @@ async function getLocation(route_color) {
             document.getElementById("first_direction").innerHTML = "East";
             document.getElementById("second_direction").innerHTML = "West";
         };
+        */
 
         return mapbox_features;
     }
     catch (error) {
         console.log(error);
-        process.exit(1);
+        //process.exit(1);
     }
 };
 
@@ -122,93 +212,131 @@ d3.json("./trips_test.json", function (data) {
     trips = data;
 
     d3.json("./all_lines_shape.json", function (data) {
-
-        //d3.json("./blue_line_shape.json", function (data) {
         shapes = data;
 
-        map.on('load', async () => {
-            // Get the locations of all Vehicle positions.
+        d3.json("./stop_names.json", function (data) {
+            stop_names = data;
 
-            // Add a Blue line for the Blue line route
-            // This won't change on refresh
-            map.addSource('route', {
-                'type': 'geojson',
-                'data': {
-                    'type': 'Feature',
-                    'properties': {},
-                    'geometry': {
-                        'type': 'LineString',
-                        'coordinates': shapes[route_color]['lat_lon']
-                    }
-                }
-            });
-            map.addLayer({
-                'id': 'route',
-                'type': 'line',
-                'source': 'route',
-                'layout': {
-                    'line-join': 'round',
-                    'line-cap': 'round'
-                },
-                'paint': {
-                    'line-color': route_color_to_plot_color[route_color],
-                    'line-width': 5
-                }
-            });
-            // Add the Blue Line Trolley locations as a source.
+            d3.json("./stop_id_to_name_mapping.json", function (data) {
+                stop_id_to_name = data;
 
-            const mapbox_features = await getLocation(route_color);
+                map.on('load', async () => {
+                    // Get the locations of all Vehicle positions.
 
-            map.addSource('trolley_locations', {
-                'type': 'geojson',
-                'data': {
-                    'type': 'FeatureCollection',
-                    'properties': {},
-                    'features': mapbox_features,
-                }
-            });
+                    // Add a Blue line for the Blue line route
+                    // This won't change on refresh
+                    map.addSource('route', {
+                        'type': 'geojson',
+                        'data': {
+                            'type': 'Feature',
+                            'properties': {},
+                            'geometry': {
+                                'type': 'LineString',
+                                'coordinates': shapes[route_color]['lat_lon']
+                            }
+                        }
+                    });
+                    map.addLayer({
+                        'id': 'route',
+                        'type': 'line',
+                        'source': 'route',
+                        'layout': {
+                            'line-join': 'round',
+                            'line-cap': 'round'
+                        },
+                        'paint': {
+                            'line-color': route_color_to_plot_color[route_color],
+                            'line-width': 5
+                        }
+                    });
+                    // Add the Blue Line Trolley locations as a source.
 
-            map.addLayer({
-                'id': 'trolley_locations',
-                'type': 'circle',
-                'source': 'trolley_locations',
-                'paint': {
-                    'circle-radius': 7,
-                    'circle-stroke-width': 1,
-                    'circle-color': [
-                        'match',
-                        ['get', 'direction'],
-                        'North', '#02ffc4',
-                        'South', '#dd02ff',
-                        'East', '#02ffc4',
-                        'West', '#dd02ff',
+                    const mapbox_features = await getLocation(route_color);
+                    arrival_time_out  = await mts_predicted_arrival_times(route_color);
+                    console.log(arrival_time_out[1]);
+                    
+                    const table_body = document.getElementById("table_body");
+
+                    var hmtl_holder = [];
+
+                    
+                    //table_body.innerHTML += `<tr>`;
+
+                    stop_names.stops[route_color].forEach(function (stop) {
+                        hmtl_holder.push(`<tr>`);
+                        hmtl_holder.push(`<th scope="row" style = "font-size: 0.85em;">${stop}</th>`);
+                        //table_body.innerHTML += ;
+                        
+                        let temp = arrival_time_out[1].get(stop);
+                        for (let i=0;i<=2;i++){
+                            hmtl_holder.push(`<td>${temp[i]}</td>`);
+                            //table_body.innerHTML += `<td>${temp[i]}</td>`;
+                        };
+                        hmtl_holder.push(`</tr>`);
+                    
+                    });
+                    
+                    //table_body.innerHTML += `<\tr>`;
+                    
+                    table_body.innerHTML += hmtl_holder.join('');
+                    //console.log();
+                    
+                    //console.log(stop_times_south);
+
+                    //const first_direction_dict = arrival_time_out[0];
+                    //const sceond_direction_dict = arrival_time_out[1];
+
+                    map.addSource('trolley_locations', {
+                        'type': 'geojson',
+                        'data': {
+                            'type': 'FeatureCollection',
+                            'properties': {},
+                            'features': mapbox_features,
+                        }
+                    });
+
+                    map.addLayer({
+                        'id': 'trolley_locations',
+                        'type': 'circle',
+                        'source': 'trolley_locations',
+                        'paint': {
+                            'circle-radius': 7,
+                            'circle-stroke-width': 1,
+                            'circle-color': [
+                                'match',
+                                ['get', 'direction'],
+                                'North', '#02ffc4',
+                                'South', '#dd02ff',
+                                'East', '#02ffc4',
+                                'West', '#dd02ff',
                 /*else */ '#ccc'
-                    ],
+                            ],
 
-                    'circle-stroke-color': 'white'
-                }
+                            'circle-stroke-color': 'white'
+                        }
+                    });
+
+                    // Update the source from the API every 2 seconds.
+                    const updateSource = setInterval(async () => {
+                        const mapbox_features = await getLocation(route_color);
+
+                        map.getSource('trolley_locations').setData(
+                            {
+                                'type': 'FeatureCollection',
+                                'properties': {},
+                                'features': mapbox_features,
+                            }
+                        );
+
+                    }, 2000);
+
+                });
             });
-
-            // Update the source from the API every 2 seconds.
-            const updateSource = setInterval(async () => {
-                const mapbox_features = await getLocation(route_color);
-
-                map.getSource('trolley_locations').setData(
-                    {
-                        'type': 'FeatureCollection',
-                        'properties': {},
-                        'features': mapbox_features,
-                    }
-                );
-
-            }, 2000);
-
         });
     });
 });
 
-}).call(this)}).call(this,require('_process'))
-},{"./node_modules/cross-fetch":9,"./node_modules/gtfs-realtime-bindings":10,"_process":22}],2:[function(require,module,exports){
+},{"./node_modules/cross-fetch":9,"./node_modules/gtfs-realtime-bindings":10}],2:[function(require,module,exports){
 "use strict";
 module.exports = asPromise;
 
@@ -9524,190 +9652,4 @@ BufferWriter.prototype.string = function write_string_buffer(value) {
 
 BufferWriter._configure();
 
-},{"./util/minimal":19,"./writer":20}],22:[function(require,module,exports){
-// shim for using process in browser
-var process = module.exports = {};
-
-// cached from whatever global is present so that test runners that stub it
-// don't break things.  But we need to wrap it in a try catch in case it is
-// wrapped in strict mode code which doesn't define any globals.  It's inside a
-// function because try/catches deoptimize in certain engines.
-
-var cachedSetTimeout;
-var cachedClearTimeout;
-
-function defaultSetTimout() {
-    throw new Error('setTimeout has not been defined');
-}
-function defaultClearTimeout () {
-    throw new Error('clearTimeout has not been defined');
-}
-(function () {
-    try {
-        if (typeof setTimeout === 'function') {
-            cachedSetTimeout = setTimeout;
-        } else {
-            cachedSetTimeout = defaultSetTimout;
-        }
-    } catch (e) {
-        cachedSetTimeout = defaultSetTimout;
-    }
-    try {
-        if (typeof clearTimeout === 'function') {
-            cachedClearTimeout = clearTimeout;
-        } else {
-            cachedClearTimeout = defaultClearTimeout;
-        }
-    } catch (e) {
-        cachedClearTimeout = defaultClearTimeout;
-    }
-} ())
-function runTimeout(fun) {
-    if (cachedSetTimeout === setTimeout) {
-        //normal enviroments in sane situations
-        return setTimeout(fun, 0);
-    }
-    // if setTimeout wasn't available but was latter defined
-    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
-        cachedSetTimeout = setTimeout;
-        return setTimeout(fun, 0);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedSetTimeout(fun, 0);
-    } catch(e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
-            return cachedSetTimeout.call(null, fun, 0);
-        } catch(e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
-            return cachedSetTimeout.call(this, fun, 0);
-        }
-    }
-
-
-}
-function runClearTimeout(marker) {
-    if (cachedClearTimeout === clearTimeout) {
-        //normal enviroments in sane situations
-        return clearTimeout(marker);
-    }
-    // if clearTimeout wasn't available but was latter defined
-    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
-        cachedClearTimeout = clearTimeout;
-        return clearTimeout(marker);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedClearTimeout(marker);
-    } catch (e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
-            return cachedClearTimeout.call(null, marker);
-        } catch (e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
-            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
-            return cachedClearTimeout.call(this, marker);
-        }
-    }
-
-
-
-}
-var queue = [];
-var draining = false;
-var currentQueue;
-var queueIndex = -1;
-
-function cleanUpNextTick() {
-    if (!draining || !currentQueue) {
-        return;
-    }
-    draining = false;
-    if (currentQueue.length) {
-        queue = currentQueue.concat(queue);
-    } else {
-        queueIndex = -1;
-    }
-    if (queue.length) {
-        drainQueue();
-    }
-}
-
-function drainQueue() {
-    if (draining) {
-        return;
-    }
-    var timeout = runTimeout(cleanUpNextTick);
-    draining = true;
-
-    var len = queue.length;
-    while(len) {
-        currentQueue = queue;
-        queue = [];
-        while (++queueIndex < len) {
-            if (currentQueue) {
-                currentQueue[queueIndex].run();
-            }
-        }
-        queueIndex = -1;
-        len = queue.length;
-    }
-    currentQueue = null;
-    draining = false;
-    runClearTimeout(timeout);
-}
-
-process.nextTick = function (fun) {
-    var args = new Array(arguments.length - 1);
-    if (arguments.length > 1) {
-        for (var i = 1; i < arguments.length; i++) {
-            args[i - 1] = arguments[i];
-        }
-    }
-    queue.push(new Item(fun, args));
-    if (queue.length === 1 && !draining) {
-        runTimeout(drainQueue);
-    }
-};
-
-// v8 likes predictible objects
-function Item(fun, array) {
-    this.fun = fun;
-    this.array = array;
-}
-Item.prototype.run = function () {
-    this.fun.apply(null, this.array);
-};
-process.title = 'browser';
-process.browser = true;
-process.env = {};
-process.argv = [];
-process.version = ''; // empty string to avoid regexp issues
-process.versions = {};
-
-function noop() {}
-
-process.on = noop;
-process.addListener = noop;
-process.once = noop;
-process.off = noop;
-process.removeListener = noop;
-process.removeAllListeners = noop;
-process.emit = noop;
-process.prependListener = noop;
-process.prependOnceListener = noop;
-
-process.listeners = function (name) { return [] }
-
-process.binding = function (name) {
-    throw new Error('process.binding is not supported');
-};
-
-process.cwd = function () { return '/' };
-process.chdir = function (dir) {
-    throw new Error('process.chdir is not supported');
-};
-process.umask = function() { return 0; };
-
-},{}]},{},[1]);
+},{"./util/minimal":19,"./writer":20}]},{},[1]);
