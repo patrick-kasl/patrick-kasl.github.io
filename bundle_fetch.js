@@ -15,6 +15,9 @@ var stop_names;
 var stop_id_to_name;
 var updated_time;
 var arrival_time_out;
+var hmtl_holder;
+var direction = 0;
+var direction_name = 'North';
 var route_color = "Blue";
 
 mapboxgl.accessToken = 'pk.eyJ1IjoicGthc2wiLCJhIjoiY2xkOWswampzMDl0bTNubW0zaGZwa3JudSJ9.rfPdeEe_uLSGhWcRZbbhpA';
@@ -54,10 +57,85 @@ function changeRoute(choice) {
             'features': mapbox_features,
         }
     );
+
+    if (route_color == "Blue") {
+        document.getElementById("first_direction").innerHTML = "North";
+        document.getElementById("second_direction").innerHTML = "South";
+    } else {
+        document.getElementById("first_direction").innerHTML = "East";
+        document.getElementById("second_direction").innerHTML = "West";
+    };
+
+    document.getElementById("direction_name_table").innerHTML = tableTitleDirection(route_color, direction);
 };
 
 // This allows the function to be used by the button in HTML
 window.changeRoute = changeRoute;
+
+function tableTitleDirection(route_color, direction){
+    var titleDirection;
+    
+    if (route_color == "Blue") {
+        if (direction == 0){
+            titleDirection = "North";
+            //document.getElementById("direction_name_table").innerHTML = "North";
+        }
+
+        if (direction == 1){
+            titleDirection = "South";
+            //document.getElementById("direction_name_table").innerHTML = "South";
+        }
+    } else {
+        if (direction == 0){
+            titleDirection = "East";
+            //document.getElementById("direction_name_table").innerHTML = "East";
+        }
+
+        if (direction == 1){
+            titleDirection = "West";
+            //document.getElementById("direction_name_table").innerHTML = "West";
+        }
+    };
+    return titleDirection;
+};
+
+function changeDirection(choice) {
+    direction = choice;
+
+    document.getElementById("direction_name_table").innerHTML = tableTitleDirection(route_color, direction);
+
+    arrival_time_out  = mts_predicted_arrival_times(route_color);
+    const table_body = document.getElementById("table_body");
+    table_body.innerHTML = tableHTML(arrival_time_out, direction);
+
+};
+
+// This allows the function to be used by the button in HTML
+window.changeDirection = changeDirection;
+
+
+function tableHTML(arrival_time_out, direction){
+
+    hmtl_holder = [];
+    console.log(arrival_time_out);
+
+    stop_names.stops[route_color].forEach(function (stop) {
+        hmtl_holder.push(`<tr>`);
+        hmtl_holder.push(`<th scope="row" style = "font-size: 0.85em;">${stop}</th>`);
+        //table_body.innerHTML += ;
+        
+        let temp = arrival_time_out[direction].get(stop);
+        for (let i=0;i<=2;i++){
+            hmtl_holder.push(`<td>${temp[i]}</td>`);
+            //table_body.innerHTML += `<td>${temp[i]}</td>`;
+        };
+        hmtl_holder.push(`</tr>`);
+    });
+
+    return hmtl_holder.join('');
+};
+
+
 
 function trolley_geojson(lon, lat, direction) {
 
@@ -85,44 +163,42 @@ async function mts_predicted_arrival_times(route_color) {
             new Uint8Array(buffer)
         );
 
-        console.log(feed);
-
         // These will store the predicted times from the most recent feed of trip updates
-        let stop_times_north = new Map();
-        let stop_times_south = new Map();
+        let stop_times_direction_one = new Map();
+        let stop_times_direction_two = new Map();
 
         
         stop_names.stops[route_color].forEach(function (stop) {
-            stop_times_north.set(stop, []);
-            stop_times_south.set(stop, []);
+            stop_times_direction_one.set(stop, []);
+            stop_times_direction_two.set(stop, []);
         });
         
         feed.entity.forEach(function (entity) {
             if (entity.tripUpdate.trip != null) {
                 if (entity.tripUpdate.trip.routeId == color_to_route_id[route_color]) {
                     if (route_color == "Blue") {
-                        if (trips[entity.tripUpdate.trip.tripId].direction_name == 'South') {
+                        if (trips[entity.tripUpdate.trip.tripId].direction_name == 'North') {
                             entity.tripUpdate.stopTimeUpdate.forEach(function (stop_time_update) {
-                                let test = stop_times_south.get(stop_id_to_name[stop_time_update.stopId]);
+                                let test = stop_times_direction_one.get(stop_id_to_name[stop_time_update.stopId]);
                                 test.push(Math.round((stop_time_update.arrival.time*1000 - Date.now())/(1000*60)));
                             });
                         }
-                        if (trips[entity.tripUpdate.trip.tripId].direction_name == 'North') {
+                        if (trips[entity.tripUpdate.trip.tripId].direction_name == 'South') {
                             entity.tripUpdate.stopTimeUpdate.forEach(function (stop_time_update) {
-                                let test = stop_times_north.get(stop_id_to_name[stop_time_update.stopId]);
+                                let test = stop_times_direction_two.get(stop_id_to_name[stop_time_update.stopId]);
                                 test.push(Math.round((stop_time_update.arrival.time*1000 - Date.now())/(1000*60)));
                             });
                         }
                     } else {
-                        if (trips[entity.tripUpdate.trip.tripId].direction_name == 'East') {
+                        if (trips[entity.tripUpdate.trip.tripId].direction_name == 'West') {
                             entity.tripUpdate.stopTimeUpdate.forEach(function (stop_time_update) {
-                                let test = stop_times_south.get(stop_id_to_name[stop_time_update.stopId]);
+                                let test = stop_times_direction_one.get(stop_id_to_name[stop_time_update.stopId]);
                                 test.push(Math.round((stop_time_update.arrival.time*1000 - Date.now())/(1000*60)));
                             });
                         }
-                        if (trips[entity.tripUpdate.trip.tripId].direction_name == 'West') {
+                        if (trips[entity.tripUpdate.trip.tripId].direction_name == 'East') {
                             entity.tripUpdate.stopTimeUpdate.forEach(function (stop_time_update) {
-                                let test = stop_times_north.get(stop_id_to_name[stop_time_update.stopId]);
+                                let test = stop_times_direction_two.get(stop_id_to_name[stop_time_update.stopId]);
                                 test.push(Math.round((stop_time_update.arrival.time*1000 - Date.now())/(1000*60)));
                             });
                         }
@@ -135,22 +211,22 @@ async function mts_predicted_arrival_times(route_color) {
         });
 
         stop_names.stops[route_color].forEach(function (stop) {
-            stop_times_north.set(stop, stop_times_north.get(stop).sort(function(a, b){return a-b}));
-            stop_times_north.set(stop, stop_times_north.get(stop).filter( x => x > -0 ));
-            stop_times_north.set(stop, stop_times_north.get(stop).filter( function( item, index, inputArray ) {return inputArray.indexOf(item) == index}));
+            stop_times_direction_one.set(stop, stop_times_direction_one.get(stop).sort(function(a, b){return a-b}));
+            stop_times_direction_one.set(stop, stop_times_direction_one.get(stop).filter( x => x > -0 ));
+            stop_times_direction_one.set(stop, stop_times_direction_one.get(stop).filter( function( item, index, inputArray ) {return inputArray.indexOf(item) == index}));
 
-            stop_times_south.set(stop, stop_times_south.get(stop).sort(function(a, b){return a-b}));
-            stop_times_south.set(stop, stop_times_south.get(stop).filter( x => x > -0 ));
-            stop_times_south.set(stop, stop_times_south.get(stop).filter( function( item, index, inputArray ) {return inputArray.indexOf(item) == index}));
+            stop_times_direction_two.set(stop, stop_times_direction_two.get(stop).sort(function(a, b){return a-b}));
+            stop_times_direction_two.set(stop, stop_times_direction_two.get(stop).filter( x => x > -0 ));
+            stop_times_direction_two.set(stop, stop_times_direction_two.get(stop).filter( function( item, index, inputArray ) {return inputArray.indexOf(item) == index}));
         });
 
         stop_names.stops[route_color].forEach(function (stop) {
-            let test = stop_times_north.get(stop);
+            let test = stop_times_direction_one.get(stop);
             test.push('*');
             test.push('*');
             test.push('*'); 
             
-            let test_2 = stop_times_south.get(stop);
+            let test_2 = stop_times_direction_two.get(stop);
             test_2.push('*');
             test_2.push('*');
             test_2.push('*'); 
@@ -158,7 +234,7 @@ async function mts_predicted_arrival_times(route_color) {
         });
 
         
-        return [stop_times_north, stop_times_south];
+        return [stop_times_direction_one, stop_times_direction_two];
     }
     catch (error) {
         console.log(error);
@@ -187,16 +263,6 @@ async function getLocation(route_color) {
         // We're at an eight hour offset from UTC: 8*60*60
         //(updated_time);
         document.getElementById("last_updated").innerHTML = updated_time.toLocaleString();
-        /*
-        if (route_color == "Blue") {
-            const dir_1 = "North";
-            document.getElementById("first_direction").innerHTML = dir_1;
-            document.getElementById("second_direction").innerHTML = "South";
-        } else {
-            document.getElementById("first_direction").innerHTML = "East";
-            document.getElementById("second_direction").innerHTML = "West";
-        };
-        */
 
         return mapbox_features;
     }
@@ -219,6 +285,16 @@ d3.json("./trips_test.json", function (data) {
 
             d3.json("./stop_id_to_name_mapping.json", function (data) {
                 stop_id_to_name = data;
+
+                if (route_color == "Blue") {
+                    document.getElementById("first_direction").innerHTML = "North";
+                    document.getElementById("second_direction").innerHTML = "South";
+                } else {
+                    document.getElementById("first_direction").innerHTML = "East";
+                    document.getElementById("second_direction").innerHTML = "West";
+                };
+
+                document.getElementById("direction_name_table").innerHTML = tableTitleDirection(route_color, direction);
 
                 map.on('load', async () => {
                     // Get the locations of all Vehicle positions.
@@ -252,40 +328,11 @@ d3.json("./trips_test.json", function (data) {
                     // Add the Blue Line Trolley locations as a source.
 
                     const mapbox_features = await getLocation(route_color);
-                    arrival_time_out  = await mts_predicted_arrival_times(route_color);
-                    console.log(arrival_time_out[1]);
-                    
+
+                    arrival_time_out  = await mts_predicted_arrival_times(route_color, direction);
                     const table_body = document.getElementById("table_body");
-
-                    var hmtl_holder = [];
-
+                    table_body.innerHTML = tableHTML(arrival_time_out, direction);
                     
-                    //table_body.innerHTML += `<tr>`;
-
-                    stop_names.stops[route_color].forEach(function (stop) {
-                        hmtl_holder.push(`<tr>`);
-                        hmtl_holder.push(`<th scope="row" style = "font-size: 0.85em;">${stop}</th>`);
-                        //table_body.innerHTML += ;
-                        
-                        let temp = arrival_time_out[1].get(stop);
-                        for (let i=0;i<=2;i++){
-                            hmtl_holder.push(`<td>${temp[i]}</td>`);
-                            //table_body.innerHTML += `<td>${temp[i]}</td>`;
-                        };
-                        hmtl_holder.push(`</tr>`);
-                    
-                    });
-                    
-                    //table_body.innerHTML += `<\tr>`;
-                    
-                    table_body.innerHTML += hmtl_holder.join('');
-                    //console.log();
-                    
-                    //console.log(stop_times_south);
-
-                    //const first_direction_dict = arrival_time_out[0];
-                    //const sceond_direction_dict = arrival_time_out[1];
-
                     map.addSource('trolley_locations', {
                         'type': 'geojson',
                         'data': {
@@ -327,6 +374,10 @@ d3.json("./trips_test.json", function (data) {
                                 'features': mapbox_features,
                             }
                         );
+
+                        arrival_time_out  = await mts_predicted_arrival_times(route_color);
+                        const table_body = document.getElementById("table_body");
+                        table_body.innerHTML = tableHTML(arrival_time_out, direction);
 
                     }, 2000);
 
