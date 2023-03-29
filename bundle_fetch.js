@@ -117,7 +117,7 @@ window.changeDirection = changeDirection;
 function tableHTML(arrival_time_out, direction){
 
     hmtl_holder = [];
-    console.log(arrival_time_out);
+    //console.log(arrival_time_out);
 
     stop_names.stops[route_color].forEach(function (stop) {
         hmtl_holder.push(`<tr>`);
@@ -329,7 +329,7 @@ d3.json("./trips_test.json", function (data) {
 
                     const mapbox_features = await getLocation(route_color);
 
-                    arrival_time_out  = await mts_predicted_arrival_times(route_color, direction);
+                    arrival_time_out  = await mts_predicted_arrival_times(route_color);
                     const table_body = document.getElementById("table_body");
                     table_body.innerHTML = tableHTML(arrival_time_out, direction);
                     
