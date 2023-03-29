@@ -157,7 +157,6 @@ async function mts_predicted_arrival_times(route_color) {
     let success = false;
     while (!success) {
 
-
         try {
             const response = await fetch("https://realtime.sdmts.com/api/api/gtfs_realtime/trip-updates-for-agency/MTS.pb?key=e2f3da8d-2ea3-40cf-9e30-0b937f0e3817", {});
             success = true;
@@ -307,10 +306,15 @@ d3.json("./trips_test.json", function (data) {
 
                 map.on('load', async () => {
                     // Get the locations of all Vehicle positions.
-                    arrival_time_out = await mts_predicted_arrival_times(route_color);
-                    const table_body = document.getElementById("table_body");
-                    table_body.innerHTML = tableHTML(arrival_time_out, direction);
-
+                    try {
+                        arrival_time_out = await mts_predicted_arrival_times(route_color);
+                        const table_body = document.getElementById("table_body");
+                        table_body.innerHTML = tableHTML(arrival_time_out, direction);
+                    }
+                    catch (error) {
+                        console.log(error);
+                        //process.exit(1);
+                    }
                     // Add a Blue line for the Blue line route
                     // This won't change on refresh
                     map.addSource('route', {
