@@ -239,6 +239,7 @@ async function mts_predicted_arrival_times(route_color) {
         }
         catch (error) {
             console.log(error);
+            console.log(feed);
             //process.exit(1);
         }
     };
@@ -261,6 +262,8 @@ async function getLocation(route_color) {
             feed.entity.forEach(function (entity) {
                 if (entity.vehicle.trip != null) {
                     if (entity.vehicle.trip.routeId == color_to_route_id[route_color]) {
+                        //console.log(entity.vehicle.trip.tripId);
+                        //console.log(trips);
                         mapbox_features.push(trolley_geojson(entity.vehicle.position.longitude, entity.vehicle.position.latitude, trips[entity.vehicle.trip.tripId].direction_name));
                     }
                 }
@@ -274,6 +277,7 @@ async function getLocation(route_color) {
         }
         catch (error) {
             console.log(error);
+            //console.log(feed);
             //process.exit(1);
         }
     };
@@ -305,6 +309,8 @@ d3.json("./trips_test.json", function (data) {
 
                 map.on('load', async () => {
                     // Get the locations of all Vehicle positions.
+                    
+                    
                     try {
                         arrival_time_out = await mts_predicted_arrival_times(route_color);
                         const table_body = document.getElementById("table_body");
@@ -314,6 +320,7 @@ d3.json("./trips_test.json", function (data) {
                         console.log(error);
                         //process.exit(1);
                     }
+                    
                     // Add a Blue line for the Blue line route
                     // This won't change on refresh
                     map.addSource('route', {
@@ -387,11 +394,11 @@ d3.json("./trips_test.json", function (data) {
                                 'features': mapbox_features,
                             }
                         );
-
+                        
                         arrival_time_out = await mts_predicted_arrival_times(route_color);
                         const table_body = document.getElementById("table_body");
                         table_body.innerHTML = tableHTML(arrival_time_out, direction);
-
+                        
                     }, 2000);
 
                 });
