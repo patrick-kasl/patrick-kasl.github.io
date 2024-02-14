@@ -1,1 +1,27 @@
-{"type":"module","dependencies":{"axios":"^1.2.4","browser-request":"^0.3.3","browserify":"^17.0.0","cross-fetch":"^3.1.5","dataframe-js":"^1.4.4","gtfs-realtime-bindings":"^1.1.1","inherits":"^2.0.4","node-fetch":"^3.3.0","request":"^2.88.2","xhr":"^2.6.0","xhr2":"^0.2.1"}}
+{
+  "type": "module",
+  "dependencies": {
+    "axios": "^1.2.4",
+    "brfs": "^2.0.2",
+    "browser-request": "^0.3.3",
+    "browserify": "^17.0.0",
+    "cross-fetch": "^3.1.5",
+    "dataframe-js": "^1.4.4",
+    "fs-extra": "^11.2.0",
+    "gtfs-realtime-bindings": "^1.1.1",
+    "inherits": "^2.0.4",
+    "node-fetch": "^3.3.0",
+    "request": "^2.88.2",
+    "xhr": "^2.6.0",
+    "xhr2": "^0.2.1"
+  },
+  "name": "patrick-kasl.github.io",
+  "description": "",
+  "version": "1.0.0",
+  "main": "bundle.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
