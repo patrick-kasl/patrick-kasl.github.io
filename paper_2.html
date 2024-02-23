@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Patrick Kasl</title>
+
+    <!-- Pico.css -->
+    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@1.*/css/pico.min.css">
+
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.css" rel="stylesheet">
+
+
+    <style>
+        .hero {
+            background-color: #394046;
+            background-image: url("torrey_pines_landscape.jpg");
+            background-position: center;
+            background-size: cover;
+        }
+
+        .legend {
+            background-color: #11191f;
+            border-radius: 3px;
+            bottom: 30px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+            padding: 10px;
+            /*position: absolute;*/
+            /*right: 10px;*/
+            z-index: 1;
+        }
+
+        .legend h4 {
+            margin: 0 0 10px;
+        }
+
+        .legend div span {
+            border-radius: 50%;
+            display: inline-block;
+            height: 10px;
+            margin-right: 5px;
+            width: 10px;
+        }
+
+        #map {
+            width: 800px;
+            height: 1000px;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script src="https://gmousse.github.io/dataframe-js/dist/dataframe.js"></script>
+    <script src='https://cdn.plot.ly/plotly-2.18.0.min.js'></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.js"></script>
+    <script type="module" src="./bundle_fetch.js"></script>
+
+</head>
+
+<body>
+
+    
+
+    <!-- Main -->
+    <link href="header_template.html" rel="import"></link>
+    <section class="container">
+
+        <!-- Medias-->
+        <figure>
+            <a href="https://www.nature.com/articles/s41598-024-51567-w"><img src="./temp_depression.webp" style="width:100%;"></a>
+            <figcaption>Average self-reported body temperature (A) and average wearable sensor-assessed distal body temperature (B) plotted by PROMIS depression symptom T-score categories. Figure panels show that individuals with PROMIS depression symptom T-scores within normal limits (WNL; green) have the lowest average self-reported and wearable sensor-assessed distal body temperatures, with increasing average self-reported and wearable sensor-assessed distal body temperatures among individuals in the mild (yellow), moderate (orange), and severe (red) PROMIS depression symptom T-score categories. Note. We took the self-reported body temperature data from each calendar day (Panel A; most frequently reported by participants in the morning) and the average of any available wearable sensor-assessed distal body temperature data from each calendar day (during awake time; Panel B) and plotted those average values for the different depression groups. We smoothed average self-reported and wearable sensor-assessed body temperatures (°C) using an exponentially weighted moving average with a 7-day window before and after each timepoint as a function of the average NIH PROMIS Adult Health Profile instrument for depression (Form 4a) score.</figcaption>
+        </figure>
+
+    </section><!-- ./ Typography-->
+    <footer>
+        <div class="container">
+          <div>
+            <p><a href="./index.html">Homepage</a> | <a href="https://www.linkedin.com/in/patrick-j-kasl/">LinkedIn</a> | ©
+              <script>document.write(new Date().getFullYear())</script> Patrick Kasl
+            </p>
+          </div>
+  
+        </div>
+      </footer>
+</body>
+
+</html>
