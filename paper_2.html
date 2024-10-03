@@ -60,16 +60,66 @@
 
 <body>
 
+    <!-- Header -->
+    <header class="container">
+        <div class="hero">
+            <nav class="container-fluid">
+                <ul>
+                    <!--
+              <li><summary href="./" class="secondary" onclick="event.preventDefault()"><strong><kbd>Patrick Kasl</kbd></strong></a></li>
+              -->
+                    <li><a href="./index.html"><img src="./profile.jpg" alt="profile" style="clip-path: circle(); height:150px;"></a></li>
+                </ul>
+                <ul>
+                    <li>
+                        <details role="list" dir="rtl">
+                            <summary aria-haspopup="listbox" role="link" class="contrast"><kbd>Research</kbd></summary>
+                            <ul role="listbox">
+                                <li><a href="./paper_1.html">Wearables and Vaccine Response</a></li>
+<!--<li><a href="#">Paper 2</a></li>
+                <li><a href="#">Current Interests</a></li>-->
+                            </ul>
+                        </details>
+                    </li>
+                    <li>
+                        <details role="list" dir="rtl">
+                            <summary aria-haspopup="listbox" role="link" class="contrast"><kbd>For Fun</kbd></summary>
+                            <ul role="listbox">
+                                <li><a href="./transit.html">San Diego Transit</a></li>
+                                <li><a href="./photography.html">Photography</a></li>
+                 <!--<li><a href="../classless/">Backpacking</a></li>
+                <li><a href="../basic-template/">Tidy Tuesday</a></li>-->
+                            </ul>
+                        </details>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="container" style="opacity: 0.85;">
+                <article>
+                    <hgroup>
+                        <h1 style="opacity: 1; color:white;"><strong><em><a href="https://www.mdpi.com/1424-8220/24/6/1818">Utilizing Wearable Device Data for Syndromic Surveillance: A Fever Detection Approach</a></em></strong></h1>
+                    </hgroup>
+                </article>
+
+            </div>
+
+        </div><!-- ./ Hero -->
+
+    </header><!-- ./ Header -->
+
+<body>
+
     
 
     <!-- Main -->
     <link href="header_template.html" rel="import"></link>
     <section class="container">
-
+        This work aimed to assess the potential of using commercially available wearable devices, specifically the Oura Ring, for syndromic surveillance. We focused on detecting fever as a key indicator of illness. We used Oura Ring data from 63,153 participants (e.g., skin temperature, heart rate, and sleep data) together with daily questionnaires that included information about subjective fever and self-assessed body temperature. We trained a tree-based classifier to classify wearable data as either from fever or non-fever days. Our model performed well, with a AUROC of 0.85 and a false positive rate of 0.8% at a sensitivity of 0.50. These results indicate the feasibility of using wearable data for real-time fever surveillance at a public health level, potentially enhancing the detection and monitoring of disease outbreaks.
         <!-- Medias-->
         <figure>
-            <a href="https://www.nature.com/articles/s41598-024-51567-w"><img src="./temp_depression.webp" style="width:100%;"></a>
-            <figcaption>Average self-reported body temperature (A) and average wearable sensor-assessed distal body temperature (B) plotted by PROMIS depression symptom T-score categories. Figure panels show that individuals with PROMIS depression symptom T-scores within normal limits (WNL; green) have the lowest average self-reported and wearable sensor-assessed distal body temperatures, with increasing average self-reported and wearable sensor-assessed distal body temperatures among individuals in the mild (yellow), moderate (orange), and severe (red) PROMIS depression symptom T-score categories. Note. We took the self-reported body temperature data from each calendar day (Panel A; most frequently reported by participants in the morning) and the average of any available wearable sensor-assessed distal body temperature data from each calendar day (during awake time; Panel B) and plotted those average values for the different depression groups. We smoothed average self-reported and wearable sensor-assessed body temperatures (°C) using an exponentially weighted moving average with a 7-day window before and after each timepoint as a function of the average NIH PROMIS Adult Health Profile instrument for depression (Form 4a) score.</figcaption>
+            <a href="https://www.mdpi.com/1424-8220/24/6/1818"><img src="./fever_fig.png" style="width:60%; display: block; margin: 0 auto;" class="center"></a>
+            <figcaption>Z-score-normalized wearable metrics from individuals, aligned by self-reported fever day (white hatched areas) and grouped by self-reported temperature on fever day. Individuals reporting temperatures in the range of (38–39 °C) are in blue (n = 621), and (39+ °C) are in red (n = 103). Lines represent the mean z-score normalized wearable metric across all participants in the respective group for each night, and shaded regions are the 95% confidence interval of the mean.</figcaption>
         </figure>
 
     </section><!-- ./ Typography-->
