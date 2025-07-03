@@ -1,0 +1,43 @@
+@import url("https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap");
+
+/* --- CORRECTED DIRECTIVES --- */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* -------------------------- */
+
+@theme {
+  /* COLOR */
+  --theme-hue: 200;
+  --color-primary: hsl(var(--theme-hue), 20%, 8%);
+  --color-primary-foreground: hsl(var(--theme-hue), 100%, 92%);
+  --color-secondary: hsl(var(--theme-hue), 40%, 12%);
+  --color-accent: hsl(var(--theme-hue), 100%, 50%);
+  --color-edge: hsl(var(--theme-hue), 30%, 18%);
+
+  /* FONT */
+  --font-primary: Rajdhani, system-ui;
+
+  /* OTHER */
+  --radius-interactive: 0.4rem;
+  --duration-interactive: 200ms;
+}
+
+@layer base {
+  :root {
+    /* Base HSL value used by colors in tailwind.config.mjs */
+    --theme-hue: 200;
+
+    /* Base styles */
+    color: hsl(var(--theme-hue), 100%, 92%); /* or use var(--color-primary-foreground) if you prefer */
+    font-family: theme('fontFamily.primary'); /* Applies the 'primary' font from your config */
+  }
+}
+
+/* @layer base {
+  :root {
+    color: var(--color-primary-foreground);
+    font-family: var(--font-primary);
+  }
+  
+} */

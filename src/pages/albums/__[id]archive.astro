@@ -1,0 +1,29 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Section from "../../components/Section.astro";
+import { type CollectionEntry, getCollection, render } from "astro:content";
+
+
+export async function getStaticPaths() {
+  const filmAlbums = await getCollection("albums");
+  return filmAlbums.map((album) => ({
+    params: { slug: album.id },
+    props: album,
+  }));
+}
+
+type Props = CollectionEntry<"albums">;
+const album = Astro.props;
+
+const { Content } = await render(album);
+---
+
+<Layout
+  siteTitle={Astro.props.data.title}
+  siteDescription={Astro.props.data.description}
+  headerCosmeticText="ALBUM"
+>
+  <Section class="prose-lg p-8">
+    <Content />
+  </Section>
+</Layout>

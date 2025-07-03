@@ -1,5 +1,28 @@
-# Browserify and Github pages are a match made in heaven
+# Backroom - A reactive portfolio template.
 
-The incredible thing is, we can take a project that works in node.js and get it to run as a static website in our own personal webpage.
+![homepage-top](https://github.com/user-attachments/assets/b1b8ed1c-4575-452d-8420-36b0d46b31bb)
 
-I've also started to explore Pyodide as I primarily work in Python day-to-day. It would be nice to be able to add components to my website built in Python. Unfortunately, Pyodide is quite slow. It seems like this is primarily due to initialization time.
+Features:
+
+- ✅ Auto populated project tags hero section.
+- ✅ Post gallery that can be sorted based on tags.
+- ✅ 100/100 Lighthouse performance
+- ✅ SEO-friendly with canonical URLs and OpenGraph data
+- ✅ Sitemap support
+- ✅ RSS Feed support
+- ✅ Markdown & MDX support
+
+![homepage-bottom](https://github.com/user-attachments/assets/041b2062-094e-483e-b37c-ccca537eeddc)
+
+## 🧞 Commands
+
+All commands are run from the root of the project, from a terminal:
+
+| Command                | Action                                           |
+| :--------------------- | :----------------------------------------------- |
+| `pnpm install`         | Installs dependencies                            |
+| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
+| `pnpm build`           | Build your production site to `./dist/`          |
+| `pnpm preview`         | Preview your build locally, before deploying     |
+| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
+| `pnpm astro -- --help` | Get help using the Astro CLI                     |

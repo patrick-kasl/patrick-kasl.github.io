@@ -1,0 +1,14 @@
+{
+  "userEmail": "patrick.j.kasl@gmail.com",
+  "userPhoneNumber": "651-343-5118",
+  "userSocials": [
+    {
+      "title": "LinkedIn",
+      "link": "https://www.linkedin.com/in/patrick-j-kasl/"
+    },
+    {
+      "title": "GitHub",
+      "link": "https://github.com/patrick-kasl"
+    }
+  ]
+}
