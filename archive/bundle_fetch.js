@@ -5,7 +5,7 @@ var fetch = require('./node_modules/cross-fetch');
 const route_color_to_plot_color_json = '{"Blue":"#0063a7", "Green":"#01ab52", "Orange":"#f78320"}';
 const route_color_to_plot_color = JSON.parse(route_color_to_plot_color_json);
 
-const color_to_route_id_json = '{"Blue": 510, "Green":530, "Orange":520}';
+const color_to_route_id_json = '{"Blue":510, "Green":530, "Orange":520}';
 const color_to_route_id = JSON.parse(color_to_route_id_json);
 
 
